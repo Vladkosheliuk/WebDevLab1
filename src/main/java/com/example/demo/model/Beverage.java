@@ -5,6 +5,8 @@ public class Beverage {
     private Long id;
     private String name;
     private String type;
+    private String size;
+    private boolean available;
     private double price;
 
     public Beverage() {}
@@ -40,4 +42,9 @@ public class Beverage {
     public void setPrice(double price) {
         this.price = price;
     }
+    public String getSize() { return size; }
+    public void setSize(String size) { this.size = size; }
+
+    public boolean isAvailable() { return available; }
+    public void setAvailable(boolean available) { this.available = available; }
 }
