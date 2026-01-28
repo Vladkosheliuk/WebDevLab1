@@ -11,7 +11,6 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(BeverageNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> handleNotFound(BeverageNotFoundException ex) {
         Map<String, String> error = new HashMap<>();
         error.put("error", ex.getMessage());
@@ -19,7 +18,6 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(BeverageAlreadyExistsException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
     public Map<String, String> handleConflict(BeverageAlreadyExistsException ex) {
         Map<String, String> error = new HashMap<>();
         error.put("error", ex.getMessage());
@@ -27,7 +25,6 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handleValidation(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult()

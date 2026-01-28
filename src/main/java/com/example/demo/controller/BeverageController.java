@@ -31,7 +31,6 @@ public class BeverageController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public Beverage create(@Valid @RequestBody BeverageDTO dto,
                            @RequestHeader("X-Client-Name") String client) {
         return service.create(dto);
@@ -43,13 +42,11 @@ public class BeverageController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable(name = "id") Long id) {
         service.delete(id);
     }
 
     @ExceptionHandler(RandomDeleteException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String handleRandomDelete(RandomDeleteException ex) {
         return ex.getMessage();
     }
