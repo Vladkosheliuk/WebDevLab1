@@ -1,44 +1,40 @@
 package com.example.demo.service;
 
 import com.example.demo.DTO.BeverageDTO;
-import com.example.demo.exception.BeverageAlreadyExistsException;
-import com.example.demo.exception.BeverageNotFoundException;
-import com.example.demo.exception.RandomDeleteException;
+import com.example.demo.exception.*;
 import com.example.demo.model.Beverage;
 import com.example.demo.repository.BeverageRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 public class BeverageService {
 
     private final BeverageRepository repository;
+    private final Random random = new Random();
 
     public BeverageService(BeverageRepository repository) {
         this.repository = repository;
     }
 
     public List<Beverage> getAll(String type) {
-        List<Beverage> list = repository.findAll();
-        if (type != null) {
-            list = list.stream()
-                    .filter(b -> b.getType().equalsIgnoreCase(type))
-                    .toList();
-        }
-        return list; // если пусто, вернется []
+        List<Beverage> all = repository.findAll();
+        if (type == null) return all;
+        return all.stream()
+                .filter(b -> b.getType().equalsIgnoreCase(type))
+                .collect(Collectors.toList());
     }
 
     public Beverage getById(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new BeverageNotFoundException("Beverage not found"));
+                .orElseThrow(() -> new BeverageNotFoundException(id));
     }
 
     public Beverage create(BeverageDTO dto) {
-        // Проверяем, существует ли уже напиток с таким именем
-        boolean exists = repository.findAll().stream()
-                .anyMatch(b -> b.getName().equalsIgnoreCase(dto.getName()));
-        if (exists) {
+        if (repository.existsByNameAndType(dto.getName(), dto.getType())) {
             throw new BeverageAlreadyExistsException("Beverage already exists");
         }
 
@@ -53,25 +49,21 @@ public class BeverageService {
     }
 
     public Beverage update(Long id, BeverageDTO dto) {
-        Beverage existing = repository.findById(id)
-                .orElseThrow(() -> new BeverageNotFoundException("Beverage not found"));
-
-        existing.setName(dto.getName());
-        existing.setType(dto.getType());
-        existing.setPrice(dto.getPrice());
-        existing.setSize(dto.getSize());
-        existing.setAvailable(dto.getAvailable());
-
-        return repository.update(id, existing);
+        Beverage beverage = getById(id);
+        beverage.setName(dto.getName());
+        beverage.setType(dto.getType());
+        beverage.setPrice(dto.getPrice());
+        beverage.setSize(dto.getSize());
+        beverage.setAvailable(dto.getAvailable());
+        return repository.update(id, beverage);
     }
 
     public void delete(Long id) {
-        if (!repository.findById(id).isPresent()) {
-            throw new BeverageNotFoundException("Beverage not found");
+        if (!repository.exists(id)) {
+            throw new BeverageNotFoundException(id);
         }
 
-        // 50% шанс выбросить RandomDeleteException
-        if (Math.random() < 0.5) {
+        if (random.nextBoolean()) {
             throw new RandomDeleteException("Random failure on delete");
         }
 

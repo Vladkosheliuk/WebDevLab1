@@ -34,4 +34,14 @@ public class BeverageRepository {
     public void delete(Long id) {
         storage.remove(id);
     }
+
+    public boolean existsByNameAndType(String name, String type) {
+        return storage.values().stream()
+                .anyMatch(b -> b.getName().equalsIgnoreCase(name) &&
+                        b.getType().equalsIgnoreCase(type));
+    }
+
+    public boolean exists(Long id) {
+        return storage.containsKey(id);
+    }
 }

@@ -24,18 +24,14 @@ public class BeverageDTO {
     @NotNull(message = "Availability is mandatory")
     private Boolean available;
 
-    // getters and setters
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
-
     public String getType() { return type; }
     public void setType(String type) { this.type = type; }
-
     public Double getPrice() { return price; }
     public void setPrice(Double price) { this.price = price; }
     public String getSize() { return size; }
     public void setSize(String size) { this.size = size; }
-
     public Boolean getAvailable() { return available; }
     public void setAvailable(Boolean available) { this.available = available; }
 }

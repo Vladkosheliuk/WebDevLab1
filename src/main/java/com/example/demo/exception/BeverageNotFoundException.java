@@ -1,7 +1,8 @@
 package com.example.demo.exception;
 
 public class BeverageNotFoundException extends RuntimeException {
-    public BeverageNotFoundException(String message) {
-        super(message);
+    public BeverageNotFoundException(Long id) {
+        super("Beverage not found: " + id);
     }
 }
+
